@@ -3,6 +3,8 @@ Not just an Universal MediaCreationTool wrapper script with ingenious support fo
 A powerful yet simple windows 10 / 11 deployment automation tool as well!  
 *If you had no success launching the script so far, this latest version will work*  
 
+**English** · [Español](README.es.md) · [Technical details](docs/TECHNICAL.en.md) · [Detalles técnicos](docs/TECHNICAL.es.md)  
+
 Presets  
 -------  
 1 ***Auto Upgrade*** with detected media, script assists setupprep for upgrading directly  
@@ -24,6 +26,10 @@ Presets
 5 ***MCT Defaults*** runs unassisted, creating media without script modification  
 > _- no added files, script passes `products.xml` to MCT and quits without touching media_  
 
+6 ***Exit*** quits the script without downloading or changing anything  
+
+<img src="preview2.png">  
+
 1-4 presets will modify created media in the following ways:  
 > _- write `auto.cmd` to run on demand for auto upgrade with edition switch and skip tpm_  
 > _- write `$ISO$` folder content (if it exists) at the root of the media_  
@@ -33,6 +39,25 @@ Presets
 > _- write `AutoUnattend.xml` in boot.wim to enable local account on Windows 11 Home (11 only)_  
 > _- patch `winsetup.dll` in boot.wim to remove windows 11 setup checks when booting from media (11 only)_  
 > _- can disable by adding `def` to script name for a default, untouched MCT media_  
+
+Linux  
+------  
+`MediaCreationTool.sh` is the same wrapper for bash - same presets, same Microsoft-hosted sources, no third party tools:  
+
+```
+./MediaCreationTool.sh                                  # interactive menu, 6 = Exit  
+./MediaCreationTool.sh iso 22H2                         # download the iso / esd in the current folder  
+./MediaCreationTool.sh auto 11_23H2 Professional en-US  # build the upgrade kit  
+./MediaCreationTool.sh usb official11                   # download the image and write it to usb  
+./MediaCreationTool.sh --dry-run iso 1909               # resolve the link and check it is alive  
+```  
+
+> _- requires `curl`, plus `python3` and `cabextract` for the catalog, `xorriso` to inject extras into an iso, `lsblk` + `dd` for usb_  
+> _- download uses `aria2c` when available, then `curl`, then `wget` - partial downloads are resumed_  
+> _- `official11` / `official10` use the microsoft software-download api (same protocol as Fido); if microsoft refuses the request from your ip, the script falls back to the catalog esd_  
+> _- the catalog returns the exact esd microsoft publishes (sha1 verified), the official api returns the real iso (x64, bootable)_  
+> _- `def` adds no extra files, `no_update` disables dynamic update - same meaning as in the bat_  
+> _- `./MediaCreationTool.sh --help` lists every version, edition, language and argument_  
 
 Simple deployment  
 -----------------   
